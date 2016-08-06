@@ -39,5 +39,31 @@ func AddFirstStr(slice []string, str string) []string {
     return append([]string{str}, slice...)
 }
 
+// InsertStr 插入一个字符串到指定下标位置
+func InsertStr(slice []string, at int, str string) ([]string, bool) {
+    if at == len(slice) {
+        return append(slice, str), true
+    }
+    if at >= 0 && at < len(slice) {
+        return append(append(slice[:at], str), slice[at:]...), true
+    }
+    return slice, false
+}
+
+// ForeachStr 迭代 []string 执行方法
+func ForeachStr(slice []string, f func(int, string)) {
+    if slice != nil {
+        for i, v := range slice {
+            f(i, v)
+        }
+    }
+}
+
+// NewStrSlice 创建一个初始长度为 0 的 []string
+func NewStrSlice() []string {
+    return make([]string, 0)
+}
+
+
 
 

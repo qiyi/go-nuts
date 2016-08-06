@@ -50,6 +50,43 @@ func TestDeleteStrAt0OK(t *testing.T) {
     }
 }
 
+func TestInsertStrAtFail1(t *testing.T) {
+    slice := []string{"b"}
+    if _, ok := InsertStr(slice, -1, "a"); ok {
+        t.Fail()
+    }
+}
+
+func TestInsertStrAtFail2(t *testing.T) {
+    slice := []string{"a"}
+    if _, ok := InsertStr(slice, 2, "b"); ok {
+        t.Fail()
+    }
+}
+
+func TestInsertStrAtOK0(t *testing.T) {
+    slice := []string{"a", "c"}
+    if result, ok := InsertStr(slice, 1, "b"); !ok {
+        t.Fail()
+    } else {
+        if len(result) != 3 && result[1] != "b" {
+            t.Fail()
+        }
+    }
+
+}
+
+func TestInsertStrAtLast(t *testing.T) {
+    slice := []string{"a", "b"}
+    if result, ok := InsertStr(slice, 2, "c"); !ok {
+        t.Fail()
+    } else {
+        if len(result) != 3 && result[2] != "c" {
+            t.Fail()
+        }
+    }
+}
+
 func TestDeleteNilStrSlice(t *testing.T) {
     var slice []string
     if _, ok := DeleteStr(slice, "a"); ok {
@@ -91,4 +128,24 @@ func TestAddFirstStr(t *testing.T) {
     }
 }
 
+func TestNewStrSlice(t *testing.T) {
+    result := NewStrSlice()
+    if result == nil || len(result) != 0 {
+        t.Fail()
+    }
+}
 
+func TestForeachStrNil(t *testing.T) {
+    ForeachStr(nil, func(int, string) {})
+}
+
+func TestForeachStrOK(t *testing.T) {
+    i := ""
+    slice := []string{"a", "b", "c"}
+    ForeachStr(slice, func(_ int, v string) {
+        i = i + v
+    })
+    if i != "abc" {
+        t.Fail()
+    }
+}
