@@ -1,6 +1,8 @@
 package slices
 
-import "testing"
+import (
+    "testing"
+)
 
 func TestNotContainsStr(t *testing.T) {
     slice := []string{"a", "b", "c"}
@@ -27,6 +29,24 @@ func TestIndexStrNotExist(t *testing.T) {
     slice := []string{"a", "b", "c"}
     if IndexStr(slice, "d") != -1 {
         t.Fail()
+    }
+}
+
+func TestDeleteStrAt0(t *testing.T) {
+    var slice []string
+    if _, ok := DeleteStrAt(slice, 0); ok {
+        t.Fail()
+    }
+}
+
+func TestDeleteStrAt0OK(t *testing.T) {
+    slice := []string{"a"}
+    if result, ok := DeleteStrAt(slice, 0); !ok {
+        t.Fail()
+    } else {
+        if len(result) != 0 {
+            t.Fail()
+        }
     }
 }
 
@@ -70,4 +90,5 @@ func TestAddFirstStr(t *testing.T) {
         t.Fail()
     }
 }
+
 

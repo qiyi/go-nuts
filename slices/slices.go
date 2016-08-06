@@ -17,11 +17,19 @@ func ContainsStr(slice []string, str string) bool {
     return IndexStr(slice, str) != -1
 }
 
+// DeleteStrAt 根据下标从 []string 里删除字符串
+func DeleteStrAt(slice []string, idx int) ([]string, bool) {
+    if idx >= 0 && idx < len(slice) {
+        return append(slice[:idx], slice[idx + 1:]...), true
+    }
+    return slice, false
+}
+
 // DeleteStr 从 []string 里移除某个字符串
 func DeleteStr(slice []string, str string) ([]string, bool) {
     idx := IndexStr(slice, str)
     if idx != -1 {
-        return append(slice[:idx], slice[idx + 1:]...), true
+        return DeleteStrAt(slice, idx)
     }
     return slice, false
 }
