@@ -88,10 +88,12 @@ func GetMap(m map[interface{}]interface{}, key string) (map[interface{}]interfac
     return nil, false
 }
 
+// NewMap 创建 map[interface{}]interface{}
 func NewMap() map[interface{}]interface{} {
     return make(map[interface{}]interface{})
 }
 
+// NewStrMap 创建 map[string]interface{}
 func NewStrMap() map[string]interface{} {
     return make(map[string]interface{})
 }
