@@ -20,6 +20,7 @@ func GetStr(m map[interface{}]interface{}, key string) (string, bool) {
     return "", false
 }
 
+// GetInt 从 map[interface{}]interface{} 里获取 int 值
 func GetInt(m map[interface{}]interface{}, key string) (int, bool) {
     if value, ok := Get(m, key); ok {
         if result, ok := value.(int); ok {
@@ -29,6 +30,7 @@ func GetInt(m map[interface{}]interface{}, key string) (int, bool) {
     return 0, false
 }
 
+// GetBool 从 map[interface{}]interface{} 里获取 bool 值
 func GetBool(m map[interface{}]interface{}, key string) (bool, bool) {
     if value, ok := Get(m, key); ok {
         if result, ok := value.(bool); ok {
@@ -38,6 +40,7 @@ func GetBool(m map[interface{}]interface{}, key string) (bool, bool) {
     return false, false
 }
 
+// GetSlice 从 map[interface{}]interface{} 里获取 []interface{} 值
 func GetSlice(m map[interface{}]interface{}, key string) ([]interface{}, bool) {
     if value, ok := Get(m, key); ok {
         if result, ok := value.([]interface{}); ok {
@@ -47,6 +50,7 @@ func GetSlice(m map[interface{}]interface{}, key string) ([]interface{}, bool) {
     return nil, false
 }
 
+// GetStrSlice 从 map[interface{}]interface{} 里获取 []string 值
 func GetStrSlice(m map[interface{}]interface{}, key string) ([]string, bool) {
     if slice, ok := GetSlice(m, key); ok {
         result := make([]string, 0)
@@ -60,6 +64,7 @@ func GetStrSlice(m map[interface{}]interface{}, key string) ([]string, bool) {
     return nil, false
 }
 
+// GetMapSlice 从 map[interface{}]interface{} 里获取 []map[interface{}]interface{} 值
 func GetMapSlice(m map[interface{}]interface{}, key string) ([]map[interface{}]interface{}, bool) {
     if slice, ok := GetSlice(m, key); ok {
         result := make([]map[interface{}]interface{}, 0)
@@ -73,6 +78,7 @@ func GetMapSlice(m map[interface{}]interface{}, key string) ([]map[interface{}]i
     return nil, false
 }
 
+// GetMap 从 map[interface{}]interface{} 里获取 map[interface{}]interface{} 值
 func GetMap(m map[interface{}]interface{}, key string) (map[interface{}]interface{}, bool) {
     if value, ok := Get(m, key); ok {
         if result, ok := value.(map[interface{}]interface{}); ok {
