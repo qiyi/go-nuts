@@ -97,4 +97,3 @@ func NewMap() map[interface{}]interface{} {
 func NewStrMap() map[string]interface{} {
     return make(map[string]interface{})
 }
-

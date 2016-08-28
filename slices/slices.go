@@ -45,7 +45,10 @@ func InsertStr(slice []string, at int, str string) ([]string, bool) {
         return append(slice, str), true
     }
     if at >= 0 && at < len(slice) {
-        return append(append(slice[:at], str), slice[at:]...), true
+        result := append([]string{}, slice[:at]...)
+        result = append(result, str)
+        result = append(result, slice[at:]...)
+        return result, true
     }
     return slice, false
 }
