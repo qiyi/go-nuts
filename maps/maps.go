@@ -98,6 +98,16 @@ func GetMap(m map[interface{}]interface{}, key string) (map[interface{}]interfac
 	return nil, false
 }
 
+// GetMap 从 map[interface{}]interface{} 里获取 map[string]interface{} 值
+func GetStrMap(m map[interface{}]interface{}, key string) (map[string]interface{}, bool) {
+	if value, ok := Get(m, key); ok {
+		if result, ok := value.(map[string]interface{}); ok {
+			return result, ok
+		}
+	}
+	return nil, false
+}
+
 // CloneStrMap 克隆 map[interface{}]interface{} 到一个新的 map[interface{}]interface
 func CloneMap(m map[interface{}]interface{}) map[interface{}]interface{} {
 	result := NewMap()

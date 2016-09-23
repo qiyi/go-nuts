@@ -243,6 +243,33 @@ func TestGetMapFail(t *testing.T) {
 	}
 }
 
+func TestGetStrMap(t *testing.T) {
+	m := NewMap()
+	m["n"] = map[string]interface{}{"a": 1}
+	if result, ok := GetStrMap(m, "n"); !ok {
+		t.Fail()
+	} else {
+		if result["a"] != 1 {
+			t.Fail()
+		}
+	}
+}
+
+func TestGetStrMapInvalidType(t *testing.T) {
+	m := NewMap()
+	m["n"] = map[interface{}]interface{}{"a": 1}
+	if _, ok := GetStrMap(m, "n"); ok {
+		t.Fail()
+	}
+}
+
+func TestGetStrMapFail(t *testing.T) {
+	m := NewMap()
+	if _, ok := GetStrMap(m, "n"); ok {
+		t.Fail()
+	}
+}
+
 func TestCloneMap(t *testing.T) {
 	m := NewMap()
 	m["n"] = 1
