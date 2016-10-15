@@ -1,5 +1,10 @@
 package slices
 
+import (
+	"fmt"
+	"strconv"
+)
+
 // IndexStr 从一个 []string 里查询字符串并返回所在下标
 func IndexStr(slice []string, str string) int {
 	if len(slice) != 0 {
@@ -67,4 +72,24 @@ func ForeachStr(slice []string, f func(int, string)) {
 // NewStrSlice 创建一个初始长度为 0 的 []string
 func NewStrSlice() []string {
 	return make([]string, 0)
+}
+
+func AsStrSlice(slice []interface{}) []string {
+	strSlice := make([]string, len(slice))
+	for i, v := range slice {
+		var s string
+		switch result := v.(type) {
+		case string:
+			s = result
+		case int:
+			s = strconv.Itoa(result)
+		case bool:
+			s = strconv.FormatBool(result)
+		default:
+			s = fmt.Sprint(result)
+		}
+		strSlice[i] = s
+	}
+	return strSlice
+
 }

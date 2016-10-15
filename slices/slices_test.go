@@ -149,3 +149,12 @@ func TestForeachStrOK(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestAsSlice(t *testing.T) {
+	type x struct{}
+	slice := []interface{}{"a", 2, true, x{}}
+	result := AsStrSlice(slice)
+	if result[0] != "a" || result[1] != "2" || result[2] != "true" {
+		t.Fail()
+	}
+}
