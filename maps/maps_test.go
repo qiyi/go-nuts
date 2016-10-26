@@ -195,16 +195,15 @@ func TestGetMapSlice2(t *testing.T) {
 
 func TestGetMapSliceInvalidType(t *testing.T) {
 	m := NewMap()
-	m["n"] = []map[string]interface{}{
-		map[string]interface{}{
-			"a": 1,
+	m["n"] = []map[int]interface{}{
+		map[int]interface{}{
+			1: 1,
 		},
-		map[string]interface{}{
-			"b": 2,
+		map[int]interface{}{
+			2: 2,
 		},
 	}
-	if result, ok := GetMapSlice(m, "n"); ok {
-		fmt.Println(result)
+	if _, ok := GetMapSlice(m, "n"); ok {
 		t.Fail()
 	}
 }
@@ -230,7 +229,7 @@ func TestGetMap(t *testing.T) {
 
 func TestGetMapInvalidType(t *testing.T) {
 	m := NewMap()
-	m["n"] = map[string]interface{}{"a": 1}
+	m["n"] = map[int]interface{}{1: 1}
 	if _, ok := GetMap(m, "n"); ok {
 		t.Fail()
 	}
@@ -257,7 +256,7 @@ func TestGetStrMap(t *testing.T) {
 
 func TestGetStrMapInvalidType(t *testing.T) {
 	m := NewMap()
-	m["n"] = map[interface{}]interface{}{"a": 1}
+	m["n"] = map[interface{}]interface{}{1: 1}
 	if _, ok := GetStrMap(m, "n"); ok {
 		t.Fail()
 	}
