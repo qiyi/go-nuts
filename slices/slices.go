@@ -1,7 +1,6 @@
 package slices
 
 import (
-	"fmt"
 	"strconv"
 )
 
@@ -74,8 +73,25 @@ func NewStrSlice() []string {
 	return make([]string, 0)
 }
 
-func AsStrSlice(slice []interface{}) []string {
+func NewSlice() []interface{} {
+	return make([]interface{}, 0)
+}
+
+func AsSlice(slice []string) []interface{} {
+	if slice == nil {
+		return nil
+	}
+	result := NewSlice()
+	for _, s := range slice {
+		result = append(result, s)
+	}
+	return result
+
+}
+
+func AsStrSlice(slice []interface{}) ([]string, bool) {
 	strSlice := make([]string, len(slice))
+	allOk := true
 	for i, v := range slice {
 		var s string
 		switch result := v.(type) {
@@ -86,10 +102,11 @@ func AsStrSlice(slice []interface{}) []string {
 		case bool:
 			s = strconv.FormatBool(result)
 		default:
-			s = fmt.Sprint(result)
+			allOk = false
+			break
 		}
 		strSlice[i] = s
 	}
-	return strSlice
+	return strSlice, allOk
 
 }
