@@ -2,8 +2,9 @@ package maps
 
 import (
 	"errors"
-	"github.com/qiyi/go-nuts/slices"
 	"strings"
+
+	"github.com/qiyi/go-nuts/slices"
 )
 
 // Get 从 map[interface{}]interface{} 里获取值
@@ -131,7 +132,7 @@ func GetMapSlice(m map[interface{}]interface{}, key interface{}) ([]map[interfac
 	}
 }
 
-// CloneStrMap 克隆 map[interface{}]interface{} 到一个新的 map[interface{}]interface
+// CloneMap 克隆 map[interface{}]interface{} 到一个新的 map[interface{}]interface
 func CloneMap(m map[interface{}]interface{}) map[interface{}]interface{} {
 	result := NewMap()
 	for key, value := range m {
@@ -266,7 +267,7 @@ func VisitStr(m map[interface{}]interface{}, paths ...interface{}) (string, erro
 		if result, ok := value.(string); ok {
 			return result, nil
 		} else {
-			return "", errors.New("Type assert error.")
+			return "", errors.New("Type assert error")
 		}
 	} else {
 		return "", err
@@ -279,7 +280,7 @@ func VisitInt(m map[interface{}]interface{}, paths ...interface{}) (int, error) 
 		if result, ok := value.(int); ok {
 			return result, nil
 		} else {
-			return 0, errors.New("Type assert error.")
+			return 0, errors.New("Type assert error")
 		}
 	} else {
 		return 0, err
@@ -292,7 +293,7 @@ func VisitBool(m map[interface{}]interface{}, paths ...interface{}) (bool, error
 		if result, ok := value.(bool); ok {
 			return result, nil
 		} else {
-			return false, errors.New("Type assert error.")
+			return false, errors.New("Type assert error")
 		}
 	} else {
 		return false, err
@@ -321,7 +322,7 @@ func visitSliceValue(m map[interface{}]interface{}, paths []interface{}) ([]inte
 			}
 			return result, nil
 		}
-		return nil, errors.New("Type assert error.")
+		return nil, errors.New("Type assert error")
 	} else {
 		return nil, err
 	}
@@ -419,16 +420,15 @@ func VisitStrMapSlice(m map[interface{}]interface{}, paths ...interface{}) ([]ma
 			return result, nil
 		}
 	}
-
-	if slice, err := visitSliceValue(m, paths); err == nil {
-		result := make([]map[string]interface{}, 0)
-		for _, s := range slice {
-			if dic, ok := s.(map[string]interface{}); ok {
-				result = append(result, dic)
-			}
-		}
-		return result, nil
-	} else {
+	slice, err := visitSliceValue(m, paths)
+	if err != nil {
 		return nil, err
 	}
+	result := make([]map[string]interface{}, 0)
+	for _, s := range slice {
+		if dic, ok := s.(map[string]interface{}); ok {
+			result = append(result, dic)
+		}
+	}
+	return result, nil
 }
