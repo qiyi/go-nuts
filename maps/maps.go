@@ -53,9 +53,6 @@ func GetSlice(m map[interface{}]interface{}, key interface{}) ([]interface{}, bo
 		if result, ok := value.([]interface{}); ok {
 			return result, true
 		}
-		if result, ok := value.([]string); ok {
-			return slices.AsSlice(result), true
-		}
 	}
 	return nil, false
 }
@@ -66,12 +63,6 @@ func GetStrSlice(m map[interface{}]interface{}, key interface{}) ([]string, bool
 		if result, ok := value.([]string); ok {
 			return result, true
 		}
-		if result, ok := value.([]interface{}); ok {
-			return slices.AsStrSlice(result)
-		}
-	}
-	if slice, ok := GetSlice(m, key); ok {
-		return slices.AsStrSlice(slice)
 	}
 	return nil, false
 }
@@ -81,9 +72,6 @@ func GetMap(m map[interface{}]interface{}, key interface{}) (map[interface{}]int
 	if value, ok := Get(m, key); ok {
 		if result, ok := value.(map[interface{}]interface{}); ok {
 			return result, true
-		}
-		if result, ok := value.(map[string]interface{}); ok {
-			return AsMap(result), true
 		}
 	}
 	return nil, false
@@ -95,9 +83,6 @@ func GetStrMap(m map[interface{}]interface{}, key interface{}) (map[string]inter
 		if result, ok := value.(map[string]interface{}); ok {
 			return result, ok
 		}
-		if result, ok := value.(map[interface{}]interface{}); ok {
-			return AsStrMap(result)
-		}
 	}
 	return nil, false
 }
@@ -108,28 +93,8 @@ func GetMapSlice(m map[interface{}]interface{}, key interface{}) ([]map[interfac
 		if result, ok := value.([]map[interface{}]interface{}); ok {
 			return result, true
 		}
-		if ms, ok := value.([]map[string]interface{}); ok {
-			result := make([]map[interface{}]interface{}, len(ms))
-			for i, v := range ms {
-				result[i] = AsMap(v)
-			}
-			return result, true
-		}
 	}
-	if slice, ok := GetSlice(m, key); ok {
-		result := make([]map[interface{}]interface{}, 0)
-		for _, s := range slice {
-			if dic, ok := s.(map[interface{}]interface{}); ok {
-				result = append(result, dic)
-			}
-			if dic, ok := s.(map[string]interface{}); ok {
-				result = append(result, AsMap(dic))
-			}
-		}
-		return result, true
-	} else {
-		return nil, false
-	}
+	return nil, false
 }
 
 // CloneMap 克隆 map[interface{}]interface{} 到一个新的 map[interface{}]interface
@@ -339,11 +304,6 @@ func VisitStrSlice(m map[interface{}]interface{}, paths ...interface{}) ([]strin
 		if result, ok := value.([]string); ok {
 			return result, nil
 		}
-		if slice, ok := value.([]interface{}); ok {
-			if result, ok := slices.AsStrSlice(slice); ok {
-				return result, nil
-			}
-		}
 		return nil, errors.New("Type assert error")
 	} else {
 		return nil, err
@@ -370,11 +330,6 @@ func VisitStrMap(m map[interface{}]interface{}, paths ...interface{}) (map[strin
 	if value, err := visitValue(m, paths); err == nil {
 		if result, ok := value.(map[string]interface{}); ok {
 			return result, nil
-		}
-		if result, ok := value.(map[interface{}]interface{}); ok {
-			if sm, ok := AsStrMap(result); ok {
-				return sm, nil
-			}
 		}
 		return nil, errors.New("Type assert error")
 	} else {
