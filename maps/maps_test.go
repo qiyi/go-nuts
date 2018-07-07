@@ -130,12 +130,8 @@ func TestGetStrSlice(t *testing.T) {
 func TestGetStrSlice2(t *testing.T) {
 	m := NewMap()
 	m["n"] = []interface{}{"a", "b"}
-	if result, ok := GetStrSlice(m, "n"); !ok {
+	if _, ok := GetStrSlice(m, "n"); ok {
 		t.Fail()
-	} else {
-		if len(result) != 2 || result[0] != "a" || result[1] != "b" {
-			t.Fail()
-		}
 	}
 }
 
@@ -165,12 +161,8 @@ func TestGetMapSlice(t *testing.T) {
 		},
 	}
 
-	if result, ok := GetMapSlice(m, "n"); !ok {
+	if _, ok := GetMapSlice(m, "n"); ok {
 		t.Fail()
-	} else {
-		if len(result) != 2 || result[0]["a"] != 1 || result[1]["b"] != 2 {
-			t.Fail()
-		}
 	}
 }
 

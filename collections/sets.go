@@ -1,5 +1,6 @@
 package sets
 
+// StrSet 创建字符串类型的 Set
 type StrSet struct {
 	m map[string]bool
 }
@@ -13,7 +14,7 @@ func (set *StrSet) Add(s string) bool {
 func (set *StrSet) Remove(s string) bool {
 	contains := set.Contains(s)
 	delete(set.m, s)
-	return !contains 
+	return !contains
 }
 
 func (set *StrSet) Size() int {
@@ -29,4 +30,4 @@ func (set *StrSet) Contains(s string) bool {
 	return contains
 }
 
-
+// TODO 支持遍历
