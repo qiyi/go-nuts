@@ -3,21 +3,30 @@ package properties
 import (
 	"bytes"
 	"errors"
+	"io"
+	"io/ioutil"
 	"strconv"
 	"strings"
 )
 
-// Reader 是对 Properties 文件的解析, 支持保留注释、换行,
-// 同时保留所有元素的顺序
+// Parser 是 Properties 文件的解析器, 支持保留注释、空白行,
+// 以及保留所有元素的顺序
 type Parser struct {
 	data      []rune
 	tokenizer *Tokenizer
 }
 
-func NewParser(data []rune) *Parser {
-	return &Parser{data: data, tokenizer: NewTokenizer(data)}
+// NewParser 创建新的解析器
+func NewParser(r io.Reader) (*Parser, error) {
+	bytes, err := ioutil.ReadAll(r)
+	if err != nil {
+		return nil, err
+	}
+	data := []rune(string(bytes))
+	return &Parser{data: data, tokenizer: NewTokenizer(data)}, nil
 }
 
+// 获取下一个节点信息
 func (p *Parser) Next() (Node, error) {
 	token := p.tokenizer.Next()
 	if token == nil {
@@ -44,7 +53,7 @@ func (p *Parser) Next() (Node, error) {
 	} else if token.Type == EqualsToken {
 		return nil, errors.New("invalid = at the beginning of a line")
 	} else {
-		// 非换行、结束、= 令牌之前的字符都收集起来 TODO unicode escape and backslash escape
+		// 非换行、结束、= 令牌之前的字符都收集起来
 		// get key
 		var key bytes.Buffer
 		key.WriteString(string(p.data[token.Offset : token.Offset+token.Length]))
