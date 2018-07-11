@@ -75,7 +75,7 @@ func (p *Parser) Next() (Node, error) {
 		if !equalsExist {
 			return nil, errors.New("no value provide for " + key.String())
 		}
-		keyStr, err := strconv.Unquote(`"` + strings.TrimRight(key.String(), "\r\t\f ") + `"`)
+		keyStr, err := unescape(strings.TrimRight(key.String(), "\r\t\f "))
 		if err != nil {
 			return nil, err
 		}
@@ -92,11 +92,72 @@ func (p *Parser) Next() (Node, error) {
 			}
 			value.WriteString(string(p.data[token.Offset : token.Offset+token.Length]))
 		}
-		valueStr, err := strconv.Unquote(`"` + strings.TrimLeft(value.String(), "\r\t\f ") + `"`)
+		valueStr, err := unescape(strings.TrimLeft(value.String(), "\r\t\f "))
 		if err != nil {
 			return nil, err
 		}
 		return &PropertyNode{Key: keyStr, Value: valueStr}, nil
 	}
+}
 
+func unescape(s string) (string, error) {
+	r := []rune(s)
+	var buf bytes.Buffer
+	escaped := false
+	position := 0
+	for position < len(r) {
+		c := r[position]
+		position++
+		if c == '\\' && !escaped {
+			escaped = true
+			continue
+		}
+		if !escaped {
+			buf.WriteRune(c)
+		} else {
+			switch c {
+			case 'r':
+				buf.WriteRune('\r')
+			case 'n':
+				buf.WriteRune('\n')
+			case 'f':
+				buf.WriteRune('\f')
+			case 't':
+				buf.WriteRune('\t')
+			case 'u':
+				if position+4 > len(s) {
+					return "", strconv.ErrSyntax
+				}
+				var v rune
+				for i := 0; i < 4; i++ {
+					x, ok := unhex(byte(r[position]))
+					if !ok {
+						return "", strconv.ErrSyntax
+					}
+					v = v<<4 | x
+					position++
+
+				}
+				buf.WriteRune(v)
+			default:
+				buf.WriteRune(c)
+
+			}
+		}
+		escaped = false
+	}
+	return buf.String(), nil
+}
+
+func unhex(b byte) (v rune, ok bool) {
+	c := rune(b)
+	switch {
+	case '0' <= c && c <= '9':
+		return c - '0', true
+	case 'a' <= c && c <= 'f':
+		return c - 'a' + 10, true
+	case 'A' <= c && c <= 'F':
+		return c - 'A' + 10, true
+	}
+	return
 }
