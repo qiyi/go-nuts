@@ -8,6 +8,7 @@ import (
 // NodeType 表示 Properties 文件里的节点类型
 type NodeType int
 
+// 节点类型定义
 const (
 	CommentType  NodeType = 0 // 注释节点
 	BlankType    NodeType = 1 // 空白行
@@ -87,7 +88,7 @@ func LoadFile(name string) (Properties, error) {
 // Keys 返回 Property 所有的 key, 无序
 func (p Properties) Keys() []string {
 	keys := make([]string, 0)
-	for key, _ := range p {
+	for key := range p {
 		keys = append(keys, key)
 	}
 	return keys

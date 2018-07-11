@@ -5,6 +5,7 @@ package properties
 // TokenType 表示令牌类型
 type TokenType int
 
+// 令牌类型定义
 const (
 	HashToken         TokenType = 0 // HashToken 表示 #
 	TextToken         TokenType = 1 // TextToken 表示文本

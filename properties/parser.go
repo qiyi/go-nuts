@@ -26,7 +26,7 @@ func NewParser(r io.Reader) (*Parser, error) {
 	return &Parser{data: data, tokenizer: NewTokenizer(data)}, nil
 }
 
-// 获取下一个节点信息
+// Next 获取下一个节点信息
 func (p *Parser) Next() (Node, error) {
 	token := p.tokenizer.Next()
 	if token == nil {

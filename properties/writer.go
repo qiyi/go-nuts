@@ -2,8 +2,8 @@ package properties
 
 import (
 	"bufio"
+	"bytes"
 	"io"
-	"strconv"
 )
 
 // ContinuationValue 表示要多行存储的值
@@ -40,8 +40,8 @@ func (w *Writer) WriteComment(comment string) error {
 
 // WriteProperty 写一个 Property
 func (w *Writer) WriteProperty(key string, value string) error {
-	ascii := strconv.QuoteToASCII(value)
-	_, err := w.w.WriteString(key + "=" + ascii[1:len(ascii)-1])
+	ascii := escape(value)
+	_, err := w.w.WriteString(key + "=" + ascii)
 	if err != nil {
 		return err
 	}
@@ -60,4 +60,52 @@ func (w *Writer) WriteBlank() error {
 		return err
 	}
 	return nil
+}
+
+const lowerhex = "0123456789abcdef"
+
+func escape(s string) string {
+	var buf bytes.Buffer
+	for _, r := range []rune(s) {
+		if r > 61 && r < 127 {
+			if r == '\\' {
+				buf.WriteRune('\\')
+				buf.WriteRune('\\')
+				continue
+			}
+			buf.WriteRune(r)
+			continue
+		}
+		switch r {
+		case ' ':
+			buf.WriteRune('\\')
+			buf.WriteRune(' ')
+		case '\t':
+			buf.WriteRune('\\')
+			buf.WriteRune('t')
+		case '\n':
+			buf.WriteRune('\\')
+			buf.WriteRune('n')
+		case '\r':
+			buf.WriteRune('\\')
+			buf.WriteRune('r')
+		case '\f':
+			buf.WriteRune('\\')
+			buf.WriteRune('f')
+		case '=', ':', '#', '!':
+			buf.WriteRune('\\')
+			buf.WriteRune(r)
+		default:
+			if r < 0x0020 || r > 0x007e {
+				buf.WriteRune('\\')
+				buf.WriteRune('u')
+				for s := 12; s >= 0; s -= 4 {
+					buf.WriteRune(rune(lowerhex[r>>uint(s)&0xF]))
+				}
+			} else {
+				buf.WriteRune(r)
+			}
+		}
+	}
+	return buf.String()
 }
