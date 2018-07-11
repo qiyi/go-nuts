@@ -38,3 +38,25 @@ for {
 }
 ```
 
+To write properties to file:
+```go
+err := p.StoreFile("filename")
+if err != nil {
+	fmt.Printlt("Store properties failed.")
+}
+```
+
+The Writer supports writing comments and blanks:
+```go
+file, err := os.Create(name)
+if err != nil {
+	return err
+}
+defer file.Close()
+writer, err := properties.NewWriter(file)
+if err != nil {
+	return err
+}
+writer.WriteComment("comments...")
+writer.WriteProperty("key", "value")
+``` 
