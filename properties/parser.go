@@ -75,7 +75,7 @@ func (p *Parser) Next() (Node, error) {
 		if !equalsExist {
 			return nil, errors.New("no value provide for " + key.String())
 		}
-		keyStr, err := unescape(strings.TrimRight(key.String(), "\r\t\f "))
+		keyStr, err := Unescape(strings.TrimRight(key.String(), "\r\t\f "))
 		if err != nil {
 			return nil, err
 		}
@@ -92,7 +92,7 @@ func (p *Parser) Next() (Node, error) {
 			}
 			value.WriteString(string(p.data[token.Offset : token.Offset+token.Length]))
 		}
-		valueStr, err := unescape(strings.TrimLeft(value.String(), "\r\t\f "))
+		valueStr, err := Unescape(strings.TrimLeft(value.String(), "\r\t\f "))
 		if err != nil {
 			return nil, err
 		}
@@ -100,7 +100,8 @@ func (p *Parser) Next() (Node, error) {
 	}
 }
 
-func unescape(s string) (string, error) {
+// Unescape 反转义 Properties 值
+func Unescape(s string) (string, error) {
 	r := []rune(s)
 	var buf bytes.Buffer
 	escaped := false

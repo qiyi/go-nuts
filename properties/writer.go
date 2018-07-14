@@ -40,7 +40,7 @@ func (w *Writer) WriteComment(comment string) error {
 
 // WriteProperty 写一个 Property
 func (w *Writer) WriteProperty(key string, value string) error {
-	ascii := escape(value)
+	ascii := Escape(value)
 	_, err := w.w.WriteString(key + "=" + ascii)
 	if err != nil {
 		return err
@@ -64,7 +64,8 @@ func (w *Writer) WriteBlank() error {
 
 const lowerhex = "0123456789abcdef"
 
-func escape(s string) string {
+// Escape 转义 properties 值
+func Escape(s string) string {
 	var buf bytes.Buffer
 	for _, r := range []rune(s) {
 		if r > 61 && r < 127 {
